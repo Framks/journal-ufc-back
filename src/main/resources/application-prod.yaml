@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: ${DB_URL}
+    driverClassName: org.postgresql.Driver
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+  liquibase:
+    analytics-enabled: true
