@@ -3,6 +3,7 @@ plugins {
 	kotlin("plugin.spring") version "1.9.25"
 	id("org.springframework.boot") version "3.5.9"
 	id("io.spring.dependency-management") version "1.1.7"
+    id("io.github.redgreencoding.plantuml") version "0.3.0"
 	kotlin("plugin.jpa") version "1.9.25"
 }
 
@@ -52,4 +53,21 @@ tasks.withType<Test> {
 
 tasks.bootJar {
     archiveFileName.set("app.jar")
+}
+
+plantuml{
+    options{
+        outputDir = project.file("docs/images")
+        format = "png"
+    }
+    diagrams{
+        project.fileTree("docs/diagramas")
+            .files
+            .filter { it.extension == "puml" }
+            .forEach{ file ->
+                create(file.nameWithoutExtension){
+                    sourceFile = project.file(file.path)
+                }
+            }
+    }
 }

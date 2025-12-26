@@ -1,5 +1,4 @@
 databaseChangeLog:
-  - changeSet:
-      id: init
-      author: system
-      changes: []
+  - include:
+      file: 001_initial_schema.yaml
+      relativeToChangelogFile: true

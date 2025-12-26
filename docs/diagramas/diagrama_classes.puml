@@ -1,0 +1,80 @@
+@startuml
+title Jornal da Universidade - Diagrama de Classes (Domínio)
+
+skinparam classAttributeIconSize 0
+
+enum UserRole {
+  ADMIN
+  TEACHER
+  STUDENT
+}
+
+enum EducationLevel {
+  FUNDAMENTAL
+  MEDIO
+  SUPERIOR
+}
+
+abstract class User {
+  +id: Long
+  +username: String
+  +name: String
+  +email: String
+  +password: String
+  +role: UserRole
+  +createdAt: LocalDateTime
+  +updatedAt: LocalDateTime
+}
+
+class Teacher
+class Student {
+  +educationLevel: EducationLevel
+  +isScholarship: Boolean
+}
+class Admin
+
+User <|-- Teacher
+User <|-- Student
+User <|-- Admin
+
+
+class Post {
+  +id: Long
+  +content: String
+  +approved: Boolean
+  +numberOfLikes: Long
+  +numberOfComments: Long
+  +createdAt: LocalDateTime
+  +updatedAt: LocalDateTime
+  +isFeatured: Boolean
+}
+
+User "1" --> "0..*" Post : author
+
+class PostMedia {
+  +postId: Long
+  +media: String
+}
+
+Post "1" --> "0..*" PostMedia : media
+
+class Comment {
+  +id: Long
+  +content: String
+  +createdAt: LocalDateTime
+  +updatedAt: LocalDateTime
+}
+
+User "1" --> "0..*" Comment : author
+Post "1" --> "0..*" Comment : comments
+
+class PostLike {
+  +postId: Long
+  +userId: Long
+  +createdAt: LocalDateTime
+}
+
+Post "1" --> "0..*" PostLike : likes
+User "1" --> "0..*" PostLike : likedBy
+
+@enduml
