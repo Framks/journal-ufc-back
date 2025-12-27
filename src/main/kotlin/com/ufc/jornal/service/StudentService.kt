@@ -1,5 +1,6 @@
 package com.ufc.jornal.service
 
+import com.ufc.jornal.domain.Admin
 import com.ufc.jornal.domain.Student
 import com.ufc.jornal.exception.InvalidStudentRequest
 import com.ufc.jornal.extencion.isSuperiorLevel
@@ -9,11 +10,13 @@ import com.ufc.jornal.rest.request.student.StudentPutRequest
 import com.ufc.jornal.rest.request.student.StudentRequest
 import java.time.LocalDateTime
 import org.springframework.data.domain.PageRequest
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
 @Service
 class StudentService(
     private val studentRepository: StudentRepository,
+    private val passwordEncoder: PasswordEncoder,
 ){
 
     fun create(request: StudentRequest) =
@@ -47,7 +50,7 @@ class StudentService(
             ?.let { student.email = it }
 
         request.password?.takeIf { it.isNotBlank() }
-            ?.let { student.password = it }
+            ?.let { student.password = passwordEncoder.encode(it) }
 
         request.isScholarship?.takeIf { it != student.isScholarship }
             ?.let { student.isScholarship = it }
@@ -57,6 +60,11 @@ class StudentService(
 
         student.updatedAt = updateAt
 
+        return student
+    }
+
+    fun encriptPassword(student: Student): Student {
+        student.password = passwordEncoder.encode(student.password)
         return student
     }
 

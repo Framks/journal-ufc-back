@@ -14,16 +14,22 @@ class AdminCreate(
     fun create(request: AdminRequest)
     = CreateAdminContext(request)
         .let { createAdmin(it) }
+        .let { encriptPassword(it) }
         .let { save(it) }
         .let { AdminMapper.toResponse(it.admin!!) }
 
     private fun createAdmin(context: CreateAdminContext) =
         context
             .let { adminService.create(it.request) }
-            .let{ context.addTeacher(it) }
+            .let{ context.addAdmin(it) }
 
     private fun save(context: CreateAdminContext) =
         context
             .let { adminService.save(it.admin!!) }
             .let { context }
+
+    private fun encriptPassword(context: CreateAdminContext) =
+        context
+            .let { adminService.encriptPassword(it.admin!!) }
+            .let { context.addAdmin(it) }
 }

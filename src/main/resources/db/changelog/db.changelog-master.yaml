@@ -1,7 +1,13 @@
 databaseChangeLog:
   - include:
       file: sql/V001__initial_schema.sql
+      author: Francisco
       relativeToChangelogFile: true
   - include:
       file: sql/V002__add_tags.sql
+      author: Francisco
+      relativeToChangelogFile: true
+  - include:
+      file: sql/V003__add_soft_delete_post.sql
+      author: Francisco
       relativeToChangelogFile: true

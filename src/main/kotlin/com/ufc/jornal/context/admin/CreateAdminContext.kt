@@ -7,5 +7,5 @@ data class CreateAdminContext(
     val request: AdminRequest,
     val admin: Admin? = null
 ){
-    fun addTeacher(admin: Admin) = copy(admin = admin)
+    fun addAdmin(admin: Admin) = copy(admin = admin)
 }

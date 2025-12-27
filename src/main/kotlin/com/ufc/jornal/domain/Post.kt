@@ -29,7 +29,7 @@ class Post(
     val author: User,
 
     @Column(columnDefinition = "TEXT")
-    val content: String,
+    var content: String,
 
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(
@@ -44,7 +44,7 @@ class Post(
     val createdAt: LocalDateTime = LocalDateTime.now(),
 
     @Column(name = "updated_at")
-    val updatedAt: LocalDateTime = LocalDateTime.now(),
+    var updatedAt: LocalDateTime = LocalDateTime.now(),
 
     @OneToMany(mappedBy = "post", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.LAZY)
     val comments: MutableList<Comment>?,
@@ -53,15 +53,15 @@ class Post(
     val likes: MutableList<PostLike>?,
 
     @Column(name = "number_of_likes")
-    val numberOfLikes: Long?,
+    var numberOfLikes: Long?,
 
     @Column(name = "number_of_comments")
-    val numberOfComments: Long?,
+    var numberOfComments: Long?,
 
     @Column(name = "is_featured")
-    val isFeatured: Boolean,
+    var isFeatured: Boolean,
 
-    val approved: Boolean,
+    var approved: Boolean,
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -70,4 +70,8 @@ class Post(
         inverseJoinColumns = [JoinColumn(name = "tag_id")]
     )
     val tags: MutableSet<Tag> = mutableSetOf(),
+
+    @Column(name = "deleted")
+    var deleted: Boolean = false,
+
 )

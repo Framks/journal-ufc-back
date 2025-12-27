@@ -15,6 +15,7 @@ class StudentCreate(
             = CreateStudentContext(request = request)
         .let { validateRequest(it) }
         .let { createStudent(it) }
+        .let { encriptPassword(it) }
         .let { save(it) }
         .let { StudentMapper.toResponse(it.student!!) }
 
@@ -31,4 +32,9 @@ class StudentCreate(
         context
             .let { studentService.save(it.student!!) }
             .let { context }
+
+    private fun encriptPassword(context: CreateStudentContext) =
+        context
+            .let { studentService.encriptPassword(it.student!!) }
+            .let { context.addStudent(it) }
 }

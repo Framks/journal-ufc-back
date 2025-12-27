@@ -7,11 +7,13 @@ import com.ufc.jornal.rest.request.admin.AdminPutRequest
 import com.ufc.jornal.rest.request.admin.AdminRequest
 import java.time.LocalDateTime
 import org.springframework.data.domain.PageRequest
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
 @Service
 class AdminService(
     private val adminRepository: AdminRepository,
+    private val passwordEncoder: PasswordEncoder,
 ) {
 
     fun create(admin: AdminRequest) =
@@ -40,10 +42,15 @@ class AdminService(
             ?.let { admin.email = it }
 
         request.password?.takeIf { it.isNotBlank() }
-            ?.let { admin.password = it }
+            ?.let { admin.password = passwordEncoder.encode(it) }
 
         admin.updatedAt = updateAt
 
+        return admin
+    }
+
+    fun encriptPassword(admin: Admin): Admin {
+        admin.password = passwordEncoder.encode(admin.password)
         return admin
     }
 }

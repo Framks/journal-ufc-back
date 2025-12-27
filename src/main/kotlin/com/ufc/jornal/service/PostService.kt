@@ -27,4 +27,20 @@ class PostService(
 
     fun save(post: Post) =
         postRepository.save(post)
+
+    fun listPosts(
+        authorCode: String?,
+        query: String?,
+        tags: List<String>?,
+        pageable: org.springframework.data.domain.Pageable
+    ) =
+        postRepository.search(
+            authorCode = authorCode,
+            query = query,
+            tags = tags,
+            pageable = pageable
+        )
+
+    fun findById(postId: Long): Post =
+        postRepository.findById(postId).orElseThrow { Exception("Post not found") }
 }
