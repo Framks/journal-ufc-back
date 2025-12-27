@@ -6,21 +6,21 @@ import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
 
 data class StudentRequest(
-    @NotBlank
+    @field:NotBlank
     val name: String,
 
-    @Email
+    @field:Email
     val email: String,
 
-    @NotBlank
+    @field:NotBlank
     val password: String,
 
-    @NotBlank
+    @field:NotBlank
     val username: String,
 
-    @JsonProperty("education_level")
+    @param:JsonProperty("education_level")
     val educationLevel: EducationLevel,
 
-    @JsonProperty("is_scholarship")
+    @param:JsonProperty("is_scholarship")
     val isScholarship: Boolean,
 )

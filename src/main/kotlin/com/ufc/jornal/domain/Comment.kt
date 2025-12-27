@@ -28,6 +28,10 @@ data class Comment(
     @Column(name = "created_at")
     val createdAt: LocalDateTime = LocalDateTime.now(),
 
-    @Column(name = "update_at")
-    val updatedAt: LocalDateTime = LocalDateTime.now()
+    @Column(name = "updated_at")
+    val updatedAt: LocalDateTime = LocalDateTime.now(),
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id", nullable = false)
+    var post: Post,
 )

@@ -18,3 +18,9 @@ spring:
 
   liquibase:
     analytics-enabled: true
+
+jwt:
+  private:
+    key: ${PRIVATE_KEY}
+  public:
+    key: ${PUBLIC_KEY}

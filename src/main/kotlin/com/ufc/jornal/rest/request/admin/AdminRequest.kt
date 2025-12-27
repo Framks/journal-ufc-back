@@ -4,15 +4,15 @@ import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
 
 data class AdminRequest(
-    @NotBlank
+    @field:NotBlank
     val name: String,
 
-    @Email
+    @field:Email
     val email: String,
 
-    @NotBlank
+    @field:NotBlank
     val password: String,
 
-    @NotBlank
+    @field:NotBlank
     val username: String,
 )

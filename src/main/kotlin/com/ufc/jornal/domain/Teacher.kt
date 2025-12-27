@@ -12,14 +12,11 @@ class Teacher(
 
     name: String,
 
-    @Column(unique = true)
-    val code: String = "PRO_".plus(UUID.randomUUID().toString()),
+    code: String = "PRO_".plus(UUID.randomUUID().toString()),
 
     username: String,
 
     email: String,
 
     password: String,
-) : User(username = username, name = name, email = email, password = password){
-
-}
+) : User(username = username, name = name, email = email, password = password, code = code)

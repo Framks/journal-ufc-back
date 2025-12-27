@@ -14,10 +14,9 @@ class Admin(
 
     username: String,
 
-    @Column(unique = true)
-    val code: String = "ADM_".plus(UUID.randomUUID().toString()),
+    code: String = "ADM_".plus(UUID.randomUUID().toString()),
 
     email: String,
 
     password: String,
-): User(username = username, name = name, email = email, password = password)
+): User(username = username, name = name, email = email, password = password, code = code)

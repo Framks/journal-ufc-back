@@ -8,6 +8,6 @@ data class PostPutRequest(
 
     val media: List<String>?,
 
-    @JsonProperty(value = "is_featured")
+    @param:JsonProperty(value = "is_featured")
     val isFeatured: Boolean?,
 )

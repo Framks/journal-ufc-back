@@ -23,4 +23,9 @@ class ExceptionHandling {
         return ResponseEntity.badRequest().body(exception.message)
     }
 
+    @ExceptionHandler(UnauthorizedException::class)
+    fun handleUnauthorizedException(request: UnauthorizedException, exception: Exception): ResponseEntity<String> {
+        logger.warn(exception.message, exception)
+        return ResponseEntity.status(400).body(exception.message)
+    }
 }

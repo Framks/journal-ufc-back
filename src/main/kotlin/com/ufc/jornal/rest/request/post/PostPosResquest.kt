@@ -6,11 +6,13 @@ data class PostPosResquest(
 
     val content: String,
 
-    @JsonProperty(value = "author_code")
+    @param:JsonProperty(value = "author_code")
     val authorCode: String,
 
     val media: List<String>?,
 
-    @JsonProperty(value = "is_featured")
+    @param:JsonProperty(value = "is_featured")
     val isFeatured: Boolean?,
+
+    val tags: List<String>?,
 )

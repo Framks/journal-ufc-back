@@ -17,8 +17,7 @@ class Student(
 
     username: String,
 
-    @Column(unique = true)
-    val code: String = "ALU_".plus(UUID.randomUUID().toString()),
+    code: String = "ALU_".plus(UUID.randomUUID().toString()),
 
     email: String,
 
@@ -29,4 +28,4 @@ class Student(
 
     @Column(name = "is_scholarship")
     var isScholarship: Boolean,
-): User(username = username, name = name, email = email, password = password )
+): User(username = username, name = name, email = email, password = password, code = code)

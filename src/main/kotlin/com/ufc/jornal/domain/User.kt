@@ -24,6 +24,9 @@ class User (
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
+    @Column(name = "code", unique = true, nullable = false)
+    val code: String,
+
     @Column(name = "username", unique = true, nullable = false)
     val username: String,
 
@@ -42,3 +45,5 @@ class User (
     @Column(name = "updated_at", nullable = false)
     var updatedAt: LocalDateTime = LocalDateTime.now(),
 )
+
+// ToDo esse cara tem que extender de UserDetails do Spring Security para funcionar a autenticação
