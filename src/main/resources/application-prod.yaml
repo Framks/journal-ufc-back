@@ -24,3 +24,5 @@ jwt:
     key: ${PRIVATE_KEY}
   public:
     key: ${PUBLIC_KEY}
+  issuer: projeto-jornal
+  access-token-expiration-minutes: 60
