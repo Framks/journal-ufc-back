@@ -3,6 +3,7 @@ plugins {
 	kotlin("plugin.spring") version "1.9.25"
 	id("org.springframework.boot") version "3.5.9"
 	id("io.spring.dependency-management") version "1.1.7"
+    id("io.github.redgreencoding.plantuml") version "0.3.0"
 	kotlin("plugin.jpa") version "1.9.25"
 }
 
@@ -26,12 +27,21 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
+
+	// Migrações de banco de dados
 	implementation("org.liquibase:liquibase-core")
 	runtimeOnly("com.h2database:h2")
-	runtimeOnly("org.postgresql:postgresql")
+	runtimeOnly("org.postgresql:postgresql:42.7.4")
+
+	// testes
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+	// Segurança
+	implementation("org.springframework.boot:spring-boot-starter-security")
+	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
+	implementation("org.springframework.security:spring-security-oauth2-jose")
 }
 
 kotlin {
@@ -52,4 +62,21 @@ tasks.withType<Test> {
 
 tasks.bootJar {
     archiveFileName.set("app.jar")
+}
+
+plantuml{
+    options{
+        outputDir = project.file("docs/images")
+        format = "png"
+    }
+    diagrams{
+        project.fileTree("docs/diagramas")
+            .files
+            .filter { it.extension == "puml" }
+            .forEach{ file ->
+                create(file.nameWithoutExtension){
+                    sourceFile = project.file(file.path)
+                }
+            }
+    }
 }

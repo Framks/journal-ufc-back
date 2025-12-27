@@ -1,0 +1,26 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  datasource:
+    url: ${DB_URL}
+    driverClassName: org.postgresql.Driver
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    open-in-view: false
+
+  liquibase:
+    analytics-enabled: true
+
+jwt:
+  private:
+    key: ${PRIVATE_KEY}
+  public:
+    key: ${PUBLIC_KEY}
