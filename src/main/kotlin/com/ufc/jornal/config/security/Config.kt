@@ -2,20 +2,18 @@ package com.ufc.jornal.config.security
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.core.authority.SimpleGrantedAuthority
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
-import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter
-import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter
 import org.springframework.security.web.SecurityFilterChain
 
-// ToDo acredito que aqui tem que ser um arquivo para cada ambiente de desenvolvimento (prod, dev, test)
 @Configuration
 @EnableWebSecurity
+@Profile("prod")
 class Config {
 
     @Bean
@@ -27,8 +25,21 @@ class Config {
             }
             .authorizeHttpRequests {
                 it
-                    .requestMatchers("/auth/**").permitAll()
-                    .requestMatchers(HttpMethod.GET, "/posts/**").permitAll()
+                    .requestMatchers(
+                        HttpMethod.POST.name(), "/admins/**",
+                        HttpMethod.POST.name(), "/teachers/**",
+                        HttpMethod.PUT.name(), "/teachers/**",
+                        HttpMethod.DELETE.name(), "/teachers/**"
+                    ).hasRole("ADMIN")
+                    .requestMatchers(
+                        "/posts/{postId}/comments",
+                        "/posts/like"
+                    ).authenticated()
+                    .requestMatchers(
+                        "/auth/**",
+                        HttpMethod.GET.name(), "/posts/**",
+                        HttpMethod.POST.name(), "/students"
+                    ).permitAll()
                     .anyRequest().authenticated()
             }
             .oauth2ResourceServer {
@@ -43,21 +54,71 @@ class Config {
 
     @Bean
     fun jwtAuthenticationConverter(): JwtAuthenticationConverter {
-        val converter = JwtGrantedAuthoritiesConverter()
-        converter.setAuthoritiesClaimName("role")
-        converter.setAuthorityPrefix("ROLE_")
+        val jwtConverter = JwtAuthenticationConverter()
+        jwtConverter.setJwtGrantedAuthoritiesConverter { jwt ->
+            val roles = jwt.getClaimAsStringList("roles")?: emptyList()
+            roles.map { role ->
+                SimpleGrantedAuthority("ROLE_$role")
+            }
+        }
+        return jwtConverter
+    }
 
+}
+
+@Configuration
+@EnableWebSecurity
+@Profile("dev", "test")
+class SecurityConfigDev {
+
+    @Bean
+    fun filterChain(http: HttpSecurity): SecurityFilterChain {
+        http
+            .csrf { it.disable() }
+            .headers { it.frameOptions { frame -> frame.disable() } }
+            .sessionManagement {
+                it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            }
+            .authorizeHttpRequests {
+                it
+                    .requestMatchers(
+                        HttpMethod.POST.name(), "/admins/**",
+                        HttpMethod.POST.name(), "/teachers/**",
+                        HttpMethod.PUT.name(), "/teachers/**",
+                        HttpMethod.DELETE.name(), "/teachers/**"
+                    ).hasRole("ADMIN")
+                    .requestMatchers(
+                        "/posts/{postId}/comments",
+                        "/posts/like"
+                    ).authenticated()
+                    .requestMatchers(
+                        "/auth/**",
+                        HttpMethod.GET.name(), "/posts/**",
+                        HttpMethod.POST.name(), "/students"
+                    ).permitAll()
+                    .requestMatchers(
+                        "/swagger-ui/**",
+                        "/v3/api-docs/**",
+                        "/h2-console/**"
+                    ).permitAll()
+                    .anyRequest().authenticated()
+            }
+            .oauth2ResourceServer {
+                it.jwt { jwt ->
+                    jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())
+                }
+            }
+
+        return http.build()
+    }
+
+    @Bean
+    fun jwtAuthenticationConverter(): JwtAuthenticationConverter {
         val jwtConverter = JwtAuthenticationConverter()
         jwtConverter.setJwtGrantedAuthoritiesConverter { jwt ->
             val role = jwt.getClaimAsString("role")
             listOf(SimpleGrantedAuthority("ROLE_$role"))
         }
-
         return jwtConverter
     }
-
-    @Bean
-    fun passwordEncoder(): PasswordEncoder =
-        BCryptPasswordEncoder()
-
 }
