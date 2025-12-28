@@ -7,6 +7,7 @@ import com.ufc.jornal.rest.response.post.UserResponse
 object PostMapper {
     fun toResponse(post: Post) =
         PostResponse(
+            id = post.id!!,
             author = UserResponse(
                 name = post.author.name,
                 code = post.author.code

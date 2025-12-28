@@ -1,10 +1,10 @@
 package com.ufc.jornal.config.security
 
-import com.ufc.jornal.constants.Endpoints
+import com.ufc.jornal.constants.ENPOINTS_DEV
+import com.ufc.jornal.constants.ENPOINTS_PROD
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
-import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
@@ -25,15 +25,15 @@ class Config {
                 it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             }
             .authorizeHttpRequests { auth ->
-                Endpoints.PUBLIC.forEach {
+                ENPOINTS_PROD.PUBLIC.forEach {
                     auth.requestMatchers(it.method, it.path).permitAll()
                 }
 
-                Endpoints.ADMIN.forEach {
+                ENPOINTS_PROD.ADMIN.forEach {
                     auth.requestMatchers(it.method, it.path).hasRole("ADMIN")
                 }
 
-                Endpoints.AUTHENTICATED.forEach {
+                ENPOINTS_PROD.AUTHENTICATED.forEach {
                     auth.requestMatchers(it.method, it.path).authenticated()
                 }
 
@@ -76,29 +76,25 @@ class SecurityConfigDev {
             .sessionManagement {
                 it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             }
-            .authorizeHttpRequests {
-                it
-                    .requestMatchers(
-                        HttpMethod.POST.name(), "/admins/**",
-                        HttpMethod.POST.name(), "/teachers/**",
-                        HttpMethod.PUT.name(), "/teachers/**",
-                        HttpMethod.DELETE.name(), "/teachers/**"
-                    ).hasRole("ADMIN")
-                    .requestMatchers(
-                        "/posts/{postId}/comments",
-                        "/posts/like"
-                    ).authenticated()
-                    .requestMatchers(
-                        "/auth/**",
-                        HttpMethod.GET.name(), "/posts/**",
-                        HttpMethod.POST.name(), "/students"
-                    ).permitAll()
-                    .requestMatchers(
-                        "/swagger-ui/**",
-                        "/v3/api-docs/**",
-                        "/h2-console/**"
-                    ).permitAll()
-                    .anyRequest().authenticated()
+            .authorizeHttpRequests { auth ->
+
+                ENPOINTS_DEV.TOOL_KIT.forEach {
+                    auth.requestMatchers(it).permitAll()
+                }
+
+                ENPOINTS_DEV.PUBLIC.forEach {
+                    auth.requestMatchers(it.method, it.path).permitAll()
+                }
+
+                ENPOINTS_DEV.ADMIN.forEach {
+                    auth.requestMatchers(it.method, it.path).hasRole("ADMIN")
+                }
+
+                ENPOINTS_DEV.AUTHENTICATED.forEach {
+                    auth.requestMatchers(it.method, it.path).authenticated()
+                }
+
+                auth.anyRequest().authenticated()
             }
             .oauth2ResourceServer {
                 it.jwt { jwt ->

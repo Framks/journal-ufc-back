@@ -39,4 +39,13 @@ interface PostRepository: JpaRepository<Post, Long> {
 
         pageable: Pageable
     ): Page<Post>
+
+    @Query("""
+        SELECT p FROM Post p
+        JOIN FETCH p.author
+        LEFT JOIN FETCH p.tags
+        LEFT JOIN FETCH p.media
+        WHERE p.id = :id
+    """)
+    fun findDetailedById(@Param("id") id: Long): Post
 }

@@ -42,5 +42,5 @@ class PostService(
         )
 
     fun findById(postId: Long): Post =
-        postRepository.findById(postId).orElseThrow { Exception("Post not found") }
+        postRepository.findDetailedById(postId)
 }

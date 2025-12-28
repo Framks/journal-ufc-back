@@ -16,12 +16,13 @@ object URL {
     const val POST = "/posts"
 }
 
-object Endpoints {
+object ENPOINTS_PROD {
 
     val PUBLIC = listOf(
         Endpoint(HttpMethod.POST, "/auth/login"),
         Endpoint(HttpMethod.GET, "/posts/*"),
-        Endpoint(HttpMethod.POST, "/students")
+        Endpoint(HttpMethod.POST, "/students"),
+        Endpoint(HttpMethod.GET, "/posts"),
     )
 
     val ADMIN = listOf(
@@ -34,5 +35,34 @@ object Endpoints {
     val AUTHENTICATED = listOf(
         Endpoint(HttpMethod.POST, "/posts/*/comments"),
         Endpoint(HttpMethod.POST, "/posts/like")
+    )
+}
+
+
+object ENPOINTS_DEV {
+
+    val PUBLIC = listOf(
+        Endpoint(HttpMethod.POST, "/auth/login"),
+        Endpoint(HttpMethod.GET, "/posts/*"),
+        Endpoint(HttpMethod.POST, "/students"),
+        Endpoint(HttpMethod.GET, "/posts"),
+    )
+
+    val ADMIN = listOf(
+        Endpoint(HttpMethod.POST, "/admins"),
+        Endpoint(HttpMethod.POST, "/teachers"),
+        Endpoint(HttpMethod.PUT, "/teachers/*"),
+        Endpoint(HttpMethod.DELETE, "/teachers/*")
+    )
+
+    val AUTHENTICATED = listOf(
+        Endpoint(HttpMethod.POST, "/posts/*/comments"),
+        Endpoint(HttpMethod.POST, "/posts/like")
+    )
+
+    val TOOL_KIT = listOf(
+        "/swagger-ui/**",
+        "/v3/api-docs/**",
+        "/h2-console/**"
     )
 }

@@ -73,5 +73,4 @@ class Post(
 
     @Column(name = "deleted")
     var deleted: Boolean = false,
-
 )

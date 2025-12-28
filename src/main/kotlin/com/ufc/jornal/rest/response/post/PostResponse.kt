@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.LocalDateTime
 
 data class PostResponse(
+    val id: Long,
     val content: String,
     val author: UserResponse,
     val media: List<String>?,

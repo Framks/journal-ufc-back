@@ -10,6 +10,7 @@ import com.ufc.jornal.rest.response.post.PostResponse
 import com.ufc.jornal.usecases.post.CreateComment
 import com.ufc.jornal.usecases.post.CreatePost
 import com.ufc.jornal.usecases.post.DeletePost
+import com.ufc.jornal.usecases.post.GetPostById
 import com.ufc.jornal.usecases.post.LikePost
 import com.ufc.jornal.usecases.post.ListPost
 import com.ufc.jornal.usecases.post.UpdatePost
@@ -38,6 +39,7 @@ class PostContoller(
     private val deletePost: DeletePost,
     private val createComment: CreateComment,
     private val likePost: LikePost,
+    private val getPostById: GetPostById,
     ) {
 
     @PostMapping
@@ -68,6 +70,14 @@ class PostContoller(
     ): Page<PostResponse> {
         return listPost.list(authorCode, q, tags, pageable)
     }// ToDo ajustar os paramtros para remover paginação atual e fazer paginação de uma melhor forma
+
+    @GetMapping("/{id}")
+    fun getPost(
+        @PathVariable
+        id: Long,
+    ): PostResponse {
+        return getPostById.find(id)
+    }
 
     @PutMapping("/{id}")
     fun updatePost(
