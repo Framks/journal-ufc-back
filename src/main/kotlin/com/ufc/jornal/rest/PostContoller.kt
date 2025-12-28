@@ -47,7 +47,7 @@ class PostContoller(
         request: PostPosResquest
     ): PostResponse {
         return createPost.post(request)
-    }
+    } // ToDo Retoranr o identificador do post criado para facilitar a navegação
 
     @GetMapping
     fun listPosts(
@@ -67,7 +67,7 @@ class PostContoller(
         ) pageable: Pageable
     ): Page<PostResponse> {
         return listPost.list(authorCode, q, tags, pageable)
-    }
+    }// ToDo ajustar os paramtros para remover paginação atual e fazer paginação de uma melhor forma
 
     @PutMapping("/{id}")
     fun updatePost(

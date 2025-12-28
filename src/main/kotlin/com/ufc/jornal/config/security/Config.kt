@@ -1,5 +1,6 @@
 package com.ufc.jornal.config.security
 
+import com.ufc.jornal.constants.Endpoints
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
@@ -23,24 +24,20 @@ class Config {
             .sessionManagement {
                 it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             }
-            .authorizeHttpRequests {
-                it
-                    .requestMatchers(
-                        HttpMethod.POST.name(), "/admins/**",
-                        HttpMethod.POST.name(), "/teachers/**",
-                        HttpMethod.PUT.name(), "/teachers/**",
-                        HttpMethod.DELETE.name(), "/teachers/**"
-                    ).hasRole("ADMIN")
-                    .requestMatchers(
-                        "/posts/{postId}/comments",
-                        "/posts/like"
-                    ).authenticated()
-                    .requestMatchers(
-                        "/auth/**",
-                        HttpMethod.GET.name(), "/posts/**",
-                        HttpMethod.POST.name(), "/students"
-                    ).permitAll()
-                    .anyRequest().authenticated()
+            .authorizeHttpRequests { auth ->
+                Endpoints.PUBLIC.forEach {
+                    auth.requestMatchers(it.method, it.path).permitAll()
+                }
+
+                Endpoints.ADMIN.forEach {
+                    auth.requestMatchers(it.method, it.path).hasRole("ADMIN")
+                }
+
+                Endpoints.AUTHENTICATED.forEach {
+                    auth.requestMatchers(it.method, it.path).authenticated()
+                }
+
+                auth.anyRequest().authenticated()
             }
             .oauth2ResourceServer {
                 it.jwt { jwt ->
@@ -116,8 +113,10 @@ class SecurityConfigDev {
     fun jwtAuthenticationConverter(): JwtAuthenticationConverter {
         val jwtConverter = JwtAuthenticationConverter()
         jwtConverter.setJwtGrantedAuthoritiesConverter { jwt ->
-            val role = jwt.getClaimAsString("role")
-            listOf(SimpleGrantedAuthority("ROLE_$role"))
+            val roles = jwt.getClaimAsStringList("roles")?: emptyList()
+            roles.map { role ->
+                SimpleGrantedAuthority("ROLE_$role")
+            }
         }
         return jwtConverter
     }
