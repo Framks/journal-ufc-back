@@ -30,7 +30,7 @@ class JwtService(
             .expiresAt(now.plus(expiration, ChronoUnit.MINUTES))
             .subject(user.id.toString())
             .claim("email", user.email)
-            .claim("roles", user.role().name)
+            .claim("roles", listOf(user.role().name))
             .build()
         val token = jwtEncoder.encode(JwtEncoderParameters.from(claims)).tokenValue
         return TokenDto(accessToken = token, expiresIn = expiration)

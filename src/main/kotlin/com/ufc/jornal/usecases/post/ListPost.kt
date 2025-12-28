@@ -6,6 +6,7 @@ import com.ufc.jornal.service.PostService
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
+
 @Service
 class ListPost(
     private val postService: PostService,

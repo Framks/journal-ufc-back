@@ -18,7 +18,6 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
-import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -48,7 +47,7 @@ class PostContoller(
         request: PostPosResquest
     ): PostResponse {
         return createPost.post(request)
-    }
+    } // ToDo Retoranr o identificador do post criado para facilitar a navegação
 
     @GetMapping
     fun listPosts(
@@ -68,7 +67,7 @@ class PostContoller(
         ) pageable: Pageable
     ): Page<PostResponse> {
         return listPost.list(authorCode, q, tags, pageable)
-    }
+    }// ToDo ajustar os paramtros para remover paginação atual e fazer paginação de uma melhor forma
 
     @PutMapping("/{id}")
     fun updatePost(
@@ -76,9 +75,7 @@ class PostContoller(
         id: Long,
 
         @RequestBody
-        request: UpdatePostRequest,
-
-        authentication: Authentication
+        request: UpdatePostRequest
     ): PostResponse {
         return updatePost.execute(id, request)
     }
@@ -100,9 +97,7 @@ class PostContoller(
         postId: Long,
 
         @RequestBody
-        request: CreateCommentRequest,
-
-        authentication: Authentication
+        request: CreateCommentRequest
     ): CommentResponse {
         return createComment.execute(postId, request)
     }

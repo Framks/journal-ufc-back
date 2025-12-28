@@ -26,3 +26,9 @@ jwt:
     key: ${PUBLIC_KEY}
   issuer: projeto-jornal
   access-token-expiration-minutes: 60
+
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false

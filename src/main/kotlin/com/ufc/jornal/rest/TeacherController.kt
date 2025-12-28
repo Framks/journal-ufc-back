@@ -33,12 +33,11 @@ class TeacherController(
     private val teacherDelete: TeacherDelete,
 ){
 
-    @PostMapping()
+    @PostMapping
     fun create(
         @Valid
         @RequestBody
         request: TeacherRequest
-
     ): TeacherResponse {
         return teacherCreate.create(request)
     }
@@ -51,7 +50,7 @@ class TeacherController(
         @RequestParam(defaultValue = "10")
         size: Int
     ): TeacherListResponse {
-        return teacherList.find(page, size)
+        return teacherList.find(size, page)
     }
 
     @GetMapping("/{code}")
